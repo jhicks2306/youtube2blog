@@ -8,6 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+  } from "@/components/ui/sheet"  
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -68,15 +76,31 @@ export default function Page({
             </CardHeader>
             <CardContent className='flex flex-col grow'>
                 <Textarea className='grow' placeholder='Outline for blog goes here...' defaultValue={outline}/>                
-                <div>
-                    { loading ? (
-                        <Button disabled className='mt-4 w-fit'>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Generate blog
-                        </Button>
-                    ) : (  
-                        <Button type="submit" onClick={handleGenerateBlog} className='mt-4 w-fit'>Generate blog</Button>
-                    )}
+                <div className='flex flex-row'>
+                    <div className='order-last'>
+                        { loading ? (
+                            <Button disabled className='mt-4 w-fit'>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Generate blog
+                            </Button>
+                        ) : (  
+                            <Button type="submit" onClick={handleGenerateBlog} className='mt-4 w-fit'>Generate blog</Button>
+                        )}
+                    </div>
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button variant='outline' className='mt-4 mr-4 w-fit'>Show transcript</Button>
+                        </SheetTrigger>
+                        <SheetContent side='bottom' className='flex flex-col h-4/6'>
+                            <SheetHeader>
+                                <SheetTitle>Transcript</SheetTitle>
+                                <SheetDescription>
+                                    Raw transcript from YouTube
+                                </SheetDescription>
+                            </SheetHeader>
+                            <Textarea  disabled className='grow' placeholder='Transcript goes here...' defaultValue={transcript}/>
+                        </SheetContent>
+                    </Sheet>
                 </div>
             </CardContent>
         </Card>
