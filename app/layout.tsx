@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter as FontSans} from "next/font/google";
 import "/styles/globals.css";
+import Sidebar from "@/components/sidebar"
 
 import { cn } from "@/lib/utils"
  
@@ -24,7 +25,12 @@ export default function RootLayout({
       <body className={cn(
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
-        )}>{children}</body>
+        )}>
+        <div className="flex w-full flex-col bg-muted/40">
+          <Sidebar/>
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
