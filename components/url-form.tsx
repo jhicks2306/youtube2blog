@@ -48,6 +48,16 @@ export function UrlForm() {
 
         try {
             // Fetch the transcript.
+            const videoResponse = await fetch('/api/get-video', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({url: values.youtubeUrl}),
+            });
+
+            const videoData = await videoResponse.json();
+            console.log(videoData)
+
+            // Fetch the transcript.
             const response = await fetch('/api/get-transcript', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
