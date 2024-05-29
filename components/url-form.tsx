@@ -108,7 +108,7 @@ export function UrlForm() {
           render={({ field }: { field: ControllerRenderProps<FormSchema, 'youtubeUrl'> }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="https://www.youtube.com/watch?v=..." {...field} />
+                <Input className='w-[50%]' placeholder="https://www.youtube.com/watch?v=..." {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
