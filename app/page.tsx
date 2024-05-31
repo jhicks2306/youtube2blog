@@ -40,7 +40,7 @@ export default async function Page() {
 
   return (
     <>
-      <main className="flex flex-col items-center min-h-screen max-h-screen gap-4 p-4 sm:pl-20">
+      <main className="flex flex-col items-center min-h-screen gap-4 p-4 sm:pl-20">
         <Card className="w-[100%]">
           <CardHeader>
             <CardTitle>Submit URL</CardTitle>
@@ -50,12 +50,12 @@ export default async function Page() {
             <UrlForm/>
           </CardContent>
         </Card>
-        <Card className="grow w-[100%] overflow-scroll">
+        <Card className="flex flex-col grow w-[100%] max-h-screen">
           <CardHeader>
             <CardTitle>Imported Videos</CardTitle>
             <CardDescription>Videos you have imported</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className='overflow-scroll'>
             <UploadedVideosTable/>
           </CardContent>
         </Card>

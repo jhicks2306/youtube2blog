@@ -20,7 +20,7 @@ export async function UploadedVideosTable() {
   const videos = await fetchVideos();
 
   return (
-    <Table>
+    <Table className="max-h-[100px]">
     <TableHeader>
       <TableRow>
         <TableHead className="w-[100px]">Thumbnail</TableHead>
@@ -29,7 +29,7 @@ export async function UploadedVideosTable() {
         <TableHead className="text-right">Actions</TableHead>
       </TableRow>
     </TableHeader>
-    <TableBody className="overflow-scroll">
+    <TableBody>
       {videos?.map((video) => (
         <TableRow key={video.id}>
           <TableCell className="font-medium"><img src={video.image_url}/></TableCell>
@@ -46,6 +46,7 @@ export async function UploadedVideosTable() {
         </TableRow>
       ))}                                                                 
     </TableBody>
+
   </Table>
   );
 }
