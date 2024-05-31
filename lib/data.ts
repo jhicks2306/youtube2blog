@@ -19,3 +19,21 @@ export async function fetchVideos() {
     throw new Error('Failed to fetch all videos.');
   }
 }
+
+export async function fetchVideoById(id: string) {
+  try {
+    const data = await sql<VideoData>`
+      SELECT
+      *
+      FROM videos
+      WHERE id = ${id}
+    `;
+
+    const video = data.rows[0];
+    console.log(video)
+    return video;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all videos.');
+  }
+}
