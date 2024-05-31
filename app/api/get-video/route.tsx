@@ -23,8 +23,10 @@ async function fetchVideoData(videoID: string | null): Promise<any | null> {
     const response = await axios.get(apiURL);
     const videoData = response.data.items[0];
     const title = videoData.snippet.title
-    const thumbnailUrl = videoData.snippet.thumbnails.default.url
-    return videoData ? { 'title': title, 'url': thumbnailUrl } : null;
+    const image_url = videoData.snippet.thumbnails.default.url
+    const published_at = videoData.snippet.publishedAt
+
+    return videoData ? { 'youtube_id': videoID, 'title': title, 'image_url': image_url, 'published_at': published_at } : null;
   } catch (error) {
     console.error('Error fetching video details:', error);
     return null;
@@ -43,6 +45,7 @@ export async function POST(request: Request) {
   if (videoID) {
     const videoData = await fetchVideoData(videoID);
     if (videoData) {
+      console.log(videoData)
       return NextResponse.json(videoData);
     } else {
       return NextResponse.json({ error: 'Unable to fetch video title' }, {status: 500});

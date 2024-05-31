@@ -18,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { decodeTranscript } from '@/lib/utils';
 import { Loader2 } from "lucide-react";
+import { createVideo, updateVideo } from "@/lib/actions";
+import { fetchVideos } from "@/lib/data";
 
 const formSchema = z.object({
     youtubeUrl: z.string().url().regex(
@@ -47,15 +49,18 @@ export function UrlForm() {
         setLoading(true);
 
         try {
-            // Fetch the transcript.
+            // Fetch the video data.
             const videoResponse = await fetch('/api/get-video', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({url: values.youtubeUrl}),
             });
 
+            if (!videoResponse.ok) {
+              throw new Error('Failed to fetch video data.');
+            }
+
             const videoData = await videoResponse.json();
-            console.log(videoData)
 
             // Fetch the transcript.
             const response = await fetch('/api/get-transcript', {
@@ -67,28 +72,32 @@ export function UrlForm() {
             if (!response.ok) {
               throw new Error('Failed to fetch transcript');
             }
-      
+            
             const data = await response.json();
-            const initalTranscript = decodeTranscript(data.transcript)
-            params.set('initalTranscript', initalTranscript);
+            const transcript = decodeTranscript(data.transcript);
+      
+            // Add to video and transcript to database
+            createVideo(videoData.youtube_id, videoData.title, videoData.image_url, videoData.published_at, transcript)
+      
+            // params.set('initalTranscript', initalTranscript);
 
             // Generate blog title and outline
-            const openaiResponse = await fetch('/api/generate-outline', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ transcript: initalTranscript }),
-            });
+            // const openaiResponse = await fetch('/api/generate-outline', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ transcript: initalTranscript }),
+            // });
         
-            if (!openaiResponse.ok) {
-                throw new Error('Failed to generate blog title and outline');
-            }
+            // if (!openaiResponse.ok) {
+            //     throw new Error('Failed to generate blog title and outline');
+            // }
                         
-            const openaiData = await openaiResponse.json();
-            const outline = openaiData.outline;
-            params.set('outline', outline);
+            // const openaiData = await openaiResponse.json();
+            // const outline = openaiData.outline;
+            // params.set('outline', outline);
 
-            // If API call is successful, navigate to outline page
-            router.push(`/outline?${params.toString()}`);
+            // // If API call is successful, navigate to outline page
+            // router.push(`/outline?${params.toString()}`);
             
     } catch (err: any) {
         setError(err.message);
@@ -121,7 +130,7 @@ export function UrlForm() {
               Get transcript
             </Button>
           ) : (  
-            <Button type="submit">Get transcript</Button>
+            <Button type="submit">Import video</Button>
           )}
         </div>
       </form>
