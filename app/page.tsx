@@ -36,7 +36,6 @@ import {
 export default async function Page() {
   // Return page to non async and move data fetching into table component.
   const videos = await fetchVideos();
-  console.log(videos)
 
   return (
     <>

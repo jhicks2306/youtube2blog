@@ -2,6 +2,7 @@
 
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
+import OpenAI from "openai";
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
   const time_stamp = new Date().toISOString()
@@ -21,7 +22,7 @@ export async function createVideo(youtube_id: string, title: string, image_url: 
   revalidatePath('/');
 }
 
-export async function updateVideo(id: string, transcript: string): Promise<{ message: string } | void> {
+export async function updateVideoTranscript(id: string, transcript: string): Promise<{ message: string } | void> {
   try {
     await sql`
     UPDATE videos
@@ -31,6 +32,21 @@ export async function updateVideo(id: string, transcript: string): Promise<{ mes
   } catch (error) {
     return {
       message: 'Database Error: Failed to update video with transcript.'
+    };
+  }
+}
+
+export async function updateVideoOutline(id: string, outline: string): Promise<{ message: string } | void> {
+  try {
+    await sql`
+    UPDATE videos
+    SET outline = ${outline}
+    WHERE id = ${id};
+    `;
+    console.log('Updating outline...')
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to update video with outline.'
     };
   }
 }
@@ -48,5 +64,37 @@ export async function deleteVideo(id: string): Promise<{ message: string } | voi
     return {
       message: 'Database Error: Failed to delete video.'
     };
+  }
+}
+
+export async function generateOutline(transcript: string) {
+
+  // Retrieve the API key from the environment variables
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+      console.error("OpenAI API key not found. Please provide it in your .env file.");
+      process.exit(1);
+    }
+
+  const openai = new OpenAI({ apiKey });
+
+  if (!transcript) {
+    throw Error('generateOutline action requires a transcript as string.')
+  }
+
+  try {
+    const prompt = `Generate a blog title and suggested outline based on the following transcript:\n\n${transcript}`;
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {"role": "system", "content": "You an assistant skilled at content creation."},
+            {"role": "user", "content": prompt}
+        ],
+        model: "gpt-3.5-turbo",
+      });
+
+    const outline = completion.choices[0].message.content;
+    return outline;
+  } catch (error: any) {
+    throw Error(error.message)
   }
 }

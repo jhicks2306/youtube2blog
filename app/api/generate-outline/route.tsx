@@ -1,11 +1,5 @@
-// app/api/generate-outline/route.ts
 import { NextResponse } from 'next/server';
 import OpenAI from "openai";
-// import dotenv from "dotenv";
-import path from "path";
-
-// Load environment variables from .env file
-// dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 // Retrieve the API key from the environment variables
 const apiKey = process.env.OPENAI_API_KEY;
@@ -18,6 +12,7 @@ const openai = new OpenAI({ apiKey });
 
 export async function POST(request: Request) {
     const { transcript }: { transcript: string } = await request.json();
+    console.log('generate-outline api called!')
 
   if (!transcript) {
     return NextResponse.json({ error: 'Transcript is required' }, { status: 400 });

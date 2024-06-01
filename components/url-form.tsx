@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { decodeTranscript } from '@/lib/utils';
 import { Loader2 } from "lucide-react";
-import { createVideo, updateVideo } from "@/lib/actions";
+import { createVideo, updateVideoTranscript } from "@/lib/actions";
 import { fetchVideos } from "@/lib/data";
 
 const formSchema = z.object({

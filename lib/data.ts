@@ -1,3 +1,5 @@
+'use server';
+
 import { sql } from '@vercel/postgres';
 import {
   VideoData,
@@ -24,7 +26,14 @@ export async function fetchVideoById(id: string) {
   try {
     const data = await sql<VideoData>`
       SELECT
-      *
+      id,
+      youtube_id,
+      title,
+      image_url,
+      transcript,
+      imported_at,
+      published_at,
+      outline
       FROM videos
       WHERE id = ${id}
     `;

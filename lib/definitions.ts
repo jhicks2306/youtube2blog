@@ -4,4 +4,7 @@ export type VideoData = {
   title: string;
   image_url: string;
   transcript: string;
+  imported_at: Date;  
+  published_at: Date;
+  outline: string;
 };

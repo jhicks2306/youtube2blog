@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { SkeletonCard } from '@/components/skeletons';
 
 export default function Page({
     searchParams,
@@ -21,7 +22,7 @@ export default function Page({
   return (
     <>
     <main className="flex flex-col items-center min-h-screen p-4 sm:pl-20">
-        <Card className="flex flex-col w-full grow">
+        {/* <Card className="flex flex-col w-full grow">
             <CardHeader>
                 <CardTitle>Review Blog</CardTitle>
                 <CardDescription>Review and refine your generated blog</CardDescription>
@@ -29,7 +30,8 @@ export default function Page({
             <CardContent className='flex flex-col grow'>
                 <Textarea className='grow' placeholder='Outline for blog goes here...' defaultValue={blog}/>
             </CardContent>
-        </Card>
+        </Card> */}
+        <SkeletonCard/>
     </main>
     </>
   );
