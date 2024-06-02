@@ -15,19 +15,20 @@ import { generateOutline, updateVideoOutline } from '@/lib/actions';
 import { revalidatePath } from 'next/cache';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
-import EditBlogCardContent from './card-content';
+import EditBlogTabs from './tabs';
 
-export default async function EditBlogCard({ video }: { video: VideoData }) {
+export default async function SettingsForm({ video }: { video: VideoData }) {
 
   return (
     <>
-      <Card className="flex flex-col w-full grow min-h-full">
-        <CardHeader>
-          <CardTitle> Edit Blog</CardTitle>
-          <CardDescription>Edit your blog outline, select settings, and generate blog</CardDescription>
-        </CardHeader>
-        <EditBlogCardContent video={video}/>
-      </Card>
+          <div className='col-span-1 col-start-6 p-4 space-y-4'>
+            <label className='text-l font-semibold leading-none tracking-tight block mt-16'>Word count</label>
+            <Slider className=''/>
+            <label className='text-l font-semibold leading-none tracking-tight block mt-16'>Tone</label>          
+            <Textarea/>
+            <label className='text-l font-semibold leading-none tracking-tight block mt-[20]'>Keywords</label>
+            <Input className=''/>
+          </div>             
     </>
   );
 };

@@ -2,6 +2,7 @@ import { fetchVideoById } from '@/lib/data';
 import OutlineCard from './card';
 import { Suspense } from 'react';
 import { SkeletonCard } from '@/components/skeletons';
+import EditBlogCard from './card';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -13,7 +14,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     <>
     <main className="flex flex-col items-center min-h-screen p-4 sm:pl-20">
         <Suspense fallback={<SkeletonCard/>}>
-            <OutlineCard video={video}/>
+            <EditBlogCard video={video}/>
         </Suspense>
     </main>
     </>
