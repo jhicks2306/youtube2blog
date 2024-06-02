@@ -4,15 +4,29 @@ import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label"
 import { generateBlog } from '@/lib/actions';
 import { VideoData } from '@/lib/definitions';
+import { useRef } from 'react';
 
 
-export default function SettingsForm( { video }: { video: VideoData }) {
+export default function SettingsForm( { video, onFormSubmit }: { video: VideoData, onFormSubmit: (submitForm: () => void) => void }) {
   const generateBlogWithBindings = generateBlog.bind(null, video.id, video.outline, video.transcript)
+  const formRef = useRef<HTMLFormElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const clickButton = () => {
+    if (buttonRef.current) {
+      buttonRef.current.click();
+    }
+  };
+
+  // Expose the clickButton method to the parent component
+  if (onFormSubmit) {
+    onFormSubmit(clickButton);
+  }
 
   return (
   <>
     <div className="relative hidden flex-col items-start gap-8 ml-4 mt-10 md:flex">
-      <form action={generateBlogWithBindings} className="flex flex-col grow w-full items-start">
+      <form ref={formRef} action={generateBlogWithBindings} className="flex flex-col grow w-full items-start">
         <fieldset className="grow rounded-lg border p-4 items-start">
           <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
           <div className="grid gap-2">
@@ -40,7 +54,7 @@ export default function SettingsForm( { video }: { video: VideoData }) {
             />
           </div>
         </fieldset>
-        <Button>Submit</Button>
+        <Button ref={buttonRef} className='hidden'>Submit</Button>
       </form>
     </div>
   </>

@@ -11,9 +11,11 @@ import TranscriptBottomSheet from './bottomsheet';
 import EditBlogTabs from './tabs';
 import SettingsForm from './settings';
 import { updateVideoOutline, updateVideoBlog } from '@/lib/actions';
+import { useRef } from 'react';
 
 
 export default function EditBlogCardContent({ video }: { video: VideoData }) {
+  const clickButtonRef = useRef<() => void>();
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const updateVideoOutlineWithId = updateVideoOutline.bind(null, video.id);
@@ -35,6 +37,12 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
     setSaving(false);
   }, 2000);
 
+  const handleGenerateBlog = () => {
+    if (clickButtonRef.current) {
+      clickButtonRef.current();
+    }
+  };
+
   const formatTime = (date: Date) => {
     // Get time to display last saved.
     return date.toLocaleTimeString('en-GB', {
@@ -53,14 +61,12 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
               handleOutline={handleOutline} 
               handleBlog={handleBlog}
               />  
-            <SettingsForm video={video} />         
+            <SettingsForm video={video} onFormSubmit={(clickButton) => (clickButtonRef.current = clickButton)}/>         
           </div>
           <div className='flex flex-row'>
               <TranscriptBottomSheet video={video}/>
               <div className=''>
-                <Link href='/blog'>
-                  <Button disabled={saving} className='mt-4 w-fit'>Generate blog</Button>
-                </Link>
+                <Button onClick={handleGenerateBlog} disabled={saving} className='mt-4 w-fit'>Generate blog</Button>
               </div>
               <div className='h-full ml-4 mt-6'>
                 {saving ? 
