@@ -11,7 +11,7 @@ export async function fetchVideos() {
       SELECT
       *
       FROM videos
-      ORDER BY imported_at
+      ORDER BY imported_at ASC
     `;
 
     const customers = data.rows;
@@ -33,13 +33,13 @@ export async function fetchVideoById(id: string) {
       transcript,
       imported_at,
       published_at,
-      outline
+      outline,
+      blog
       FROM videos
       WHERE id = ${id}
     `;
 
     const video = data.rows[0];
-    console.log(video)
     return video;
   } catch (err) {
     console.error('Database Error:', err);

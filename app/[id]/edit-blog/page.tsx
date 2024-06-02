@@ -7,7 +7,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   console.log(id)
   const video = await fetchVideoById(id)
-  console.log(`value of video outline from page: ${video.outline}`)
 
   return (
     <>

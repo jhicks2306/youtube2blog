@@ -22,9 +22,10 @@ type EditBlogTabsProps = {
   video: VideoData;
   saving: boolean;
   handleOutline: (newOutline: string) => void;
+  handleBlog: (newBloge: string) => void;
 };
 
-export default function EditBlogTabs({ video, saving, handleOutline }: EditBlogTabsProps) {
+export default function EditBlogTabs({ video, saving, handleOutline, handleBlog }: EditBlogTabsProps) {
 
   return (
     <>
@@ -48,6 +49,10 @@ export default function EditBlogTabs({ video, saving, handleOutline }: EditBlogT
               <Textarea className=''
               name='blog-text'
               placeholder='Blog goes here...'
+              defaultValue={video.blog}
+              onChange={(e) => {
+                handleBlog(e.target.value);
+              }}
               disabled={saving}
               />
             </TabsContent>

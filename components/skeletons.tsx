@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import TranscriptBottomSheet from "@/app/[id]/outline/bottomsheet"
+import TranscriptBottomSheet from "@/app/[id]/edit-blog/bottomsheet"
 import { Button } from "./ui/button"
 
 export function SkeletonCard() {

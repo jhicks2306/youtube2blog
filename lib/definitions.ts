@@ -7,4 +7,5 @@ export type VideoData = {
   imported_at: Date;  
   published_at: Date;
   outline: string;
+  blog: string;
 };

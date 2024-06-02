@@ -7,7 +7,7 @@ import { VideoData } from '@/lib/definitions';
 
 
 export default function SettingsForm( { video }: { video: VideoData }) {
-  const generateBlogWithBindings = generateBlog.bind(null, video.outline, video.transcript)
+  const generateBlogWithBindings = generateBlog.bind(null, video.id, video.outline, video.transcript)
 
   return (
   <>
