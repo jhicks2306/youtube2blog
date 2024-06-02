@@ -29,6 +29,7 @@ export async function updateVideoTranscript(id: string, transcript: string): Pro
     SET transcript = ${transcript}
     WHERE id = ${id};
     `;
+    console.log("New transcript updated in database.")
   } catch (error) {
     return {
       message: 'Database Error: Failed to update video with transcript.'
@@ -43,12 +44,13 @@ export async function updateVideoOutline(id: string, outline: string): Promise<{
     SET outline = ${outline}
     WHERE id = ${id};
     `;
-    console.log('Updating outline...')
+    console.log('New outline updated in databse.')
   } catch (error) {
     return {
       message: 'Database Error: Failed to update video with outline.'
     };
   }
+  revalidatePath('/[id]/outline', 'page')
 }
 
 export async function deleteVideo(id: string): Promise<{ message: string } | void> {
@@ -97,4 +99,15 @@ export async function generateOutline(transcript: string) {
   } catch (error: any) {
     throw Error(error.message)
   }
+}
+
+export async function generateBlog(outline: string, transcript: string, formData: FormData) {
+
+  const rawFormData = {
+    wordCount: formData.get('word-count'),
+    tone: formData.get('tone'),
+    keywords: formData.get('keywords'),
+  }
+
+  console.log(outline, transcript, rawFormData.wordCount, rawFormData.tone, rawFormData.keywords)
 }

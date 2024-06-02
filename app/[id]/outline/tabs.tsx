@@ -1,3 +1,5 @@
+'use client'
+
 import { Textarea } from '@/components/ui/textarea';
 import {
   Card,
@@ -16,36 +18,38 @@ import { revalidatePath } from 'next/cache';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 
-export default async function EditBlogTabs({ video }: { video: VideoData }) {
+type EditBlogTabsProps = {
+  video: VideoData;
+  saving: boolean;
+  handleOutline: (newOutline: string) => void;
+};
 
-  if (!video) {
-    return null;
-  }
-
-  if (!video.outline) {
-    const outline = await generateOutline(video.transcript)
-
-    if (typeof outline === 'string') {
-       await updateVideoOutline(video.id, outline);
-       video.outline = outline;
-       revalidatePath('/[id]/outline', 'page')
-    } else {
-      console.error('Generated outline is not a string:', outline);
-    }
-  }
+export default function EditBlogTabs({ video, saving, handleOutline }: EditBlogTabsProps) {
 
   return (
     <>
-          <Tabs defaultValue="outline" className="flex flex-col col-span-5">
+          <Tabs defaultValue="outline" className="flex flex-col col-span-4">
             <TabsList className='grid grid-cols-2'>
               <TabsTrigger value="outline">Outline</TabsTrigger>
               <TabsTrigger value="blog">Blog</TabsTrigger>
             </TabsList>
             <TabsContent value="outline" className='data-[state="active"]:flex data-[state="active"]:grow'>
-              <Textarea className='' placeholder='Outline for blog goes here...' defaultValue={video.outline}/>                
+              <Textarea className=''
+              name='outline-text'
+              placeholder='Outline for blog goes here...'
+              defaultValue={video.outline}
+              onChange={(e) => {
+                handleOutline(e.target.value);
+              }}
+              disabled={saving}
+              />                
             </TabsContent>
             <TabsContent value="blog" className='data-[state="active"]:flex data-[state="active"]:grow'>
-              <Textarea className='' placeholder='Blog goes here...'/>
+              <Textarea className=''
+              name='blog-text'
+              placeholder='Blog goes here...'
+              disabled={saving}
+              />
             </TabsContent>
           </Tabs>         
     </>

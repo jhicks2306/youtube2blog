@@ -19,6 +19,22 @@ import EditBlogCardContent from './card-content';
 
 export default async function EditBlogCard({ video }: { video: VideoData }) {
 
+  if (!video) {
+    return null;
+  }
+
+  if (!video.outline) {
+    const outline = await generateOutline(video.transcript)
+
+    if (typeof outline === 'string') {
+       await updateVideoOutline(video.id, outline);
+       video.outline = outline;
+    } else {
+      console.error('Generated outline is not a string:', outline);
+    }
+  }
+
+
   return (
     <>
       <Card className="flex flex-col w-full grow min-h-full">

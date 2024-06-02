@@ -1,5 +1,4 @@
 import { fetchVideoById } from '@/lib/data';
-import OutlineCard from './card';
 import { Suspense } from 'react';
 import { SkeletonCard } from '@/components/skeletons';
 import EditBlogCard from './card';
