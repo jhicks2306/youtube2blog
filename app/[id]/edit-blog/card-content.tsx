@@ -10,6 +10,7 @@ import EditBlogTabs from './tabs';
 import SettingsForm from './settings';
 import { updateVideoOutline, updateVideoBlog } from '@/lib/actions';
 import { useRef } from 'react';
+import { generateBlog } from '@/lib/actions';
 
 
 export default function EditBlogCardContent({ video }: { video: VideoData }) {
@@ -19,6 +20,8 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
    const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const updateVideoOutlineWithId = updateVideoOutline.bind(null, video.id);
   const updateVideoBlogWithId = updateVideoBlog.bind(null, video.id);
+  const generateBlogWithBindings = generateBlog.bind(null, video.id, video.outline, video.transcript)
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleOutline = useDebouncedCallback(async (newOutline: string) => {
     setSaving(true);
@@ -38,10 +41,6 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
 
   const handleGenerateBlog = () => {
     setActiveTab('blog');
-    if (clickButtonRef.current) {
-      clickButtonRef.current();
-    }
-    console.log('handlegenerateblog run.')
   };
 
   const formatTime = (date: Date) => {
@@ -55,23 +54,21 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
   return (
     <>
         <CardContent className='flex flex-col grow'>
+          <form ref={formRef} action={generateBlogWithBindings} className="flex flex-col grow">
           <div className='grid grid-cols-5 grow'>
-            <EditBlogTabs 
+            <EditBlogTabs
               video={video} 
               saving={saving} 
               handleOutline={handleOutline} 
               handleBlog={handleBlog}
               activeTab={activeTab}
               />  
-            <SettingsForm 
-              video={video}
-              onFormSubmit={(clickButton) => (clickButtonRef.current = clickButton)}
-              />       
+            <SettingsForm/>       
           </div>
           <div className='flex flex-row'>
               <TranscriptBottomSheet video={video}/>
               <div className=''>
-                <Button onClick={handleGenerateBlog} disabled={saving} className='mt-4 w-fit'>Generate blog</Button>
+                <Button type='submit' onClick={handleGenerateBlog} disabled={saving} className='mt-4 w-fit'>Generate blog</Button>
               </div>
               <div className='h-full ml-4 mt-6'>
                 {saving ? 
@@ -79,6 +76,7 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
                 <p className='text-sm text-muted-foreground'>{lastSaved ? 'Last saved at ' + formatTime(lastSaved) : 'Not saved this session.'}</p>}
               </div>
           </div>
+        </form>
         </CardContent>
     </>
   );

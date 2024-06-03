@@ -145,18 +145,19 @@ export async function generateBlog( id: string, outline: string, transcript: str
      When generating the blog, follow this outline:\n\n${outline}\n\n
      Include these keyword(s): ${rawFormData.keywords}\n\n
      Finally, be sure to write with this tone of voice: ${rawFormData.tone}`;
-    const completion = await openai.chat.completions.create({
-        messages: [
-            {"role": "system", "content": "You an assistant skilled at content creation."},
-            {"role": "user", "content": prompt}
-        ],
-        model: "gpt-3.5-turbo",
-      });
+    // const completion = await openai.chat.completions.create({
+    //     messages: [
+    //         {"role": "system", "content": "You an assistant skilled at content creation."},
+    //         {"role": "user", "content": prompt}
+    //     ],
+    //     model: "gpt-3.5-turbo",
+    //   });
 
-    const blog = completion.choices[0].message.content;
-    console.log(blog)
-    if (typeof blog === 'string') { await updateVideoBlog(id, blog) }
-    return blog;
+    // const blog = completion.choices[0].message.content;
+    // console.log(blog)
+    // if (typeof blog === 'string') { await updateVideoBlog(id, blog) }
+    // return blog;
+    console.log(prompt)
   } catch (error: any) {
     // Check if error has a message property
     const errorMessage = error?.message || 'An unexpected error occurred';
