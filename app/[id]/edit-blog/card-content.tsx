@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce'
 import { CardContent } from "@/components/ui/card"
@@ -16,8 +14,9 @@ import { useRef } from 'react';
 
 export default function EditBlogCardContent({ video }: { video: VideoData }) {
   const clickButtonRef = useRef<() => void>();
+  const [activeTab, setActiveTab] = useState('outline');
   const [saving, setSaving] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const updateVideoOutlineWithId = updateVideoOutline.bind(null, video.id);
   const updateVideoBlogWithId = updateVideoBlog.bind(null, video.id);
 
@@ -38,9 +37,11 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
   }, 2000);
 
   const handleGenerateBlog = () => {
+    setActiveTab('blog');
     if (clickButtonRef.current) {
       clickButtonRef.current();
     }
+    console.log('handlegenerateblog run.')
   };
 
   const formatTime = (date: Date) => {
@@ -60,8 +61,12 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
               saving={saving} 
               handleOutline={handleOutline} 
               handleBlog={handleBlog}
+              activeTab={activeTab}
               />  
-            <SettingsForm video={video} onFormSubmit={(clickButton) => (clickButtonRef.current = clickButton)}/>         
+            <SettingsForm 
+              video={video}
+              onFormSubmit={(clickButton) => (clickButtonRef.current = clickButton)}
+              />       
           </div>
           <div className='flex flex-row'>
               <TranscriptBottomSheet video={video}/>

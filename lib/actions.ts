@@ -3,6 +3,7 @@
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import OpenAI from "openai";
+import { redirect } from 'next/navigation'
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
   const time_stamp = new Date().toISOString()
@@ -67,6 +68,7 @@ export async function updateVideoBlog(id: string, blog: string): Promise<{ messa
     };
   }
   revalidatePath('/[id]/edit-blog', 'page')
+  redirect(`/${id}/edit-blog`)
 }
 
 export async function deleteVideo(id: string): Promise<{ message: string } | void> {

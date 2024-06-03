@@ -1,3 +1,5 @@
+'use client';
+
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,9 +7,16 @@ import { Label } from "@/components/ui/label"
 import { generateBlog } from '@/lib/actions';
 import { VideoData } from '@/lib/definitions';
 import { useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 
-export default function SettingsForm( { video, onFormSubmit }: { video: VideoData, onFormSubmit: (submitForm: () => void) => void }) {
+export default function SettingsForm( { 
+  video, 
+  onFormSubmit,
+ }: { 
+  video: VideoData, 
+  onFormSubmit: (submitForm: () => void) => void,
+ }) {
   const generateBlogWithBindings = generateBlog.bind(null, video.id, video.outline, video.transcript)
   const formRef = useRef<HTMLFormElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -15,14 +24,29 @@ export default function SettingsForm( { video, onFormSubmit }: { video: VideoDat
   const clickButton = () => {
     if (buttonRef.current) {
       buttonRef.current.click();
+      console.log('button clicked.')
     }
-  };
+
+  // const handleFormSubmit = () => {
+  //   // Set loading state to true when form is submitted
+  //   console.log("Generating a fake blog.", localLoading)
+  //   setTimeout(() => {
+  //     // After 3 seconds, set loading state back to false
+  //   setLocalLoading(false);
+  //   console.log('finished', localLoading);
+
+  //   if (onLoadingChange) {
+  //     onLoadingChange(localLoading);
+  //   }
+  //   }, 3000);
+  // };
 
   // Expose the clickButton method to the parent component
   if (onFormSubmit) {
     onFormSubmit(clickButton);
   }
 
+  }
   return (
   <>
     <div className="relative hidden flex-col items-start gap-8 ml-4 mt-10 md:flex">

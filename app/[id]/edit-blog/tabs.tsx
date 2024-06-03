@@ -17,19 +17,26 @@ import { generateOutline, updateVideoOutline } from '@/lib/actions';
 import { revalidatePath } from 'next/cache';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
+import { useState, useEffect } from 'react';
 
 type EditBlogTabsProps = {
   video: VideoData;
   saving: boolean;
   handleOutline: (newOutline: string) => void;
   handleBlog: (newBloge: string) => void;
+  activeTab: string;
 };
 
-export default function EditBlogTabs({ video, saving, handleOutline, handleBlog }: EditBlogTabsProps) {
+export default function EditBlogTabs({ video, saving, handleOutline, handleBlog, activeTab }: EditBlogTabsProps) {
+  const [currentTab, setCurrentTab] = useState(activeTab);
+
+  useEffect(() => {
+    setCurrentTab(activeTab);
+  }, [activeTab]);
 
   return (
     <>
-          <Tabs defaultValue="outline" className="flex flex-col col-span-4">
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="flex flex-col col-span-4">
             <TabsList className='grid grid-cols-2'>
               <TabsTrigger value="outline">Outline</TabsTrigger>
               <TabsTrigger value="blog">Blog</TabsTrigger>
