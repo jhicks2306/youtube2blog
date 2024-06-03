@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { VideoData } from '@/lib/definitions';
 import TranscriptBottomSheet from './bottomsheet';
 import EditBlogTabs from './tabs';
-import SettingsForm from './settings';
+import SettingsFieldset from './settings';
 import { updateVideoOutline, updateVideoBlog } from '@/lib/actions';
 import { useRef } from 'react';
 import { generateBlog } from '@/lib/actions';
@@ -63,7 +63,7 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
               handleBlog={handleBlog}
               activeTab={activeTab}
               />  
-            <SettingsForm/>       
+            <SettingsFieldset/>       
           </div>
           <div className='flex flex-row'>
               <TranscriptBottomSheet video={video}/>

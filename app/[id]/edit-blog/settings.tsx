@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label"
 
-export default function SettingsForm() {
+export default function SettingsFieldset() {
   
   return (
    <>
