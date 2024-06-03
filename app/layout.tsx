@@ -26,10 +26,7 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased",
           fontSans.variable
         )}>
-        <div className="flex w-full flex-col bg-muted/40">
-          <Sidebar/>
           {children}
-        </div>
       </body>
     </html>
   );

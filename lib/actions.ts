@@ -52,7 +52,7 @@ export async function updateVideoOutline(id: string, outline: string): Promise<{
       message: 'Database Error: Failed to update video with outline.'
     };
   }
-  revalidatePath('/[id]/edit-blog', 'page')
+  revalidatePath('/dashboard/[id]/edit-blog', 'page')
 }
 
 export async function updateVideoBlog(id: string, blog: string): Promise<{ message: string } | void> {
@@ -68,7 +68,7 @@ export async function updateVideoBlog(id: string, blog: string): Promise<{ messa
       message: 'Database Error: Failed to update video with blog.'
     };
   }
-  revalidatePath('/[id]/edit-blog', 'page')
+  revalidatePath('/dashboard/[id]/edit-blog', 'page')
 }
 
 export async function deleteVideo(id: string): Promise<{ message: string } | void> {

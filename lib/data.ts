@@ -11,7 +11,7 @@ export async function fetchVideos() {
       SELECT
       *
       FROM videos
-      ORDER BY imported_at ASC
+      ORDER BY imported_at DESC
     `;
 
     const customers = data.rows;
