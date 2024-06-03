@@ -11,6 +11,7 @@ import SettingsFieldset from './settings';
 import { updateVideoOutline, updateVideoBlog } from '@/lib/actions';
 import { useRef } from 'react';
 import { generateBlog } from '@/lib/actions';
+import { FormButton } from './form-button';
 
 
 export default function EditBlogCardContent({ video }: { video: VideoData }) {
@@ -62,13 +63,14 @@ export default function EditBlogCardContent({ video }: { video: VideoData }) {
               handleOutline={handleOutline} 
               handleBlog={handleBlog}
               activeTab={activeTab}
+              setActiveTab={setActiveTab}
               />  
             <SettingsFieldset/>       
           </div>
           <div className='flex flex-row'>
               <TranscriptBottomSheet video={video}/>
               <div className=''>
-                <Button type='submit' onClick={handleGenerateBlog} disabled={saving} className='mt-4 w-fit'>Generate blog</Button>
+                <FormButton onClick={handleGenerateBlog} className='mt-4 w-fit'>Generate blog</FormButton>
               </div>
               <div className='h-full ml-4 mt-6'>
                 {saving ? 

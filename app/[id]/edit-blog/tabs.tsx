@@ -18,6 +18,8 @@ import { revalidatePath } from 'next/cache';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { useState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom'
+import { SkeletonBlogArea } from '@/components/skeletons';
 
 type EditBlogTabsProps = {
   video: VideoData;
@@ -25,10 +27,12 @@ type EditBlogTabsProps = {
   handleOutline: (newOutline: string) => void;
   handleBlog: (newBloge: string) => void;
   activeTab: string;
+  setActiveTab: (tab: string) => void;
 };
 
-export default function EditBlogTabs({ video, saving, handleOutline, handleBlog, activeTab }: EditBlogTabsProps) {
+export default function EditBlogTabs({ video, saving, handleOutline, handleBlog, activeTab, setActiveTab }: EditBlogTabsProps) {
   const [currentTab, setCurrentTab] = useState(activeTab);
+  const {pending} = useFormStatus();
 
   useEffect(() => {
     setCurrentTab(activeTab);
@@ -36,11 +40,23 @@ export default function EditBlogTabs({ video, saving, handleOutline, handleBlog,
 
   return (
     <>
-          <Tabs value={currentTab} onValueChange={setCurrentTab} className="flex flex-col col-span-4">
-            <TabsList className='grid grid-cols-2'>
-              <TabsTrigger value="outline">Outline</TabsTrigger>
-              <TabsTrigger value="blog">Blog</TabsTrigger>
-            </TabsList>
+          <Tabs value={currentTab} 
+          onValueChange={(tab) => {
+            setCurrentTab(tab);
+            setActiveTab(tab);
+          }} 
+          className="flex flex-col col-span-4">
+            {!pending?
+              <TabsList className='grid grid-cols-2'>
+                <TabsTrigger value="outline" className=''>Outline</TabsTrigger>
+                <TabsTrigger value="blog" className=''>Blog</TabsTrigger>
+              </TabsList>
+            :
+              <TabsList className='grid grid-cols-2'>
+                <TabsTrigger value="outline" className='opacity-50 pointer-events-none'>Outline</TabsTrigger>
+                <TabsTrigger value="blog" className='opactiy-50 pointer-events-none'>Blog</TabsTrigger>
+              </TabsList>
+            }
             <TabsContent value="outline" className='data-[state="active"]:flex data-[state="active"]:grow'>
               <Textarea className=''
               name='outline-text'
@@ -49,19 +65,22 @@ export default function EditBlogTabs({ video, saving, handleOutline, handleBlog,
               onChange={(e) => {
                 handleOutline(e.target.value);
               }}
-              disabled={saving}
+              disabled={saving || pending}
               />                
             </TabsContent>
             <TabsContent value="blog" className='data-[state="active"]:flex data-[state="active"]:grow'>
-              <Textarea className=''
-              name='blog-text'
-              placeholder='Blog goes here...'
-              defaultValue={video.blog}
-              onChange={(e) => {
-                handleBlog(e.target.value);
-              }}
-              disabled={saving}
-              />
+              { !pending?
+                <Textarea className=''
+                name='blog-text'
+                placeholder='Blog goes here...'
+                defaultValue={video.blog}
+                onChange={(e) => {
+                  handleBlog(e.target.value);
+                }}
+                disabled={saving}
+                /> : 
+                <SkeletonBlogArea/>      
+            }
             </TabsContent>
           </Tabs>         
     </>

@@ -10,3 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 export function decodeTranscript(text: string): string {
   return he.decode(text);
 }
+
+export const sleeper = () => {
+  return new Promise(resolve => setTimeout(resolve, 2000));
+};

@@ -53,3 +53,36 @@ export function SkeletonCard() {
   </Card>
   )
 }
+
+export function SkeletonBlogArea() {
+  return (
+      <div className="flex flex-col grow space-y-4 p-4 border border-input rounded-md mb-8">
+        <Skeleton className="h-4 w-[40%] rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[25%]" />
+          <Skeleton className="h-4 w-[20%]" />
+          <Skeleton className="h-4 w-[25%]" />
+        </div>
+        <div className=""></div>
+        <Skeleton className="h-4 w-[40%] rounded-xl" />
+        <div className="space-y-2 show-1">
+          <Skeleton className="h-4 w-[25%] " />
+          <Skeleton className="h-4 w-[20%]" />
+          <Skeleton className="h-4 w-[25%]" />
+        </div>
+        <Skeleton className="h-4 w-[40%] rounded-xl" />
+        <div className="space-y-2 show-2">
+          <Skeleton className="h-4 w-[25%]" />
+          <Skeleton className="h-4 w-[20%]" />
+          <Skeleton className="h-4 w-[25%]" />
+        </div>
+        <div className=""></div>
+        <Skeleton className="h-4 w-[40%] rounded-xl" />
+        <div className="space-y-2 show-3">
+          <Skeleton className="h-4 w-[25%]" />
+          <Skeleton className="h-4 w-[20%]" />
+          <Skeleton className="h-4 w-[25%]" />
+        </div>    
+      </div> 
+  )
+}

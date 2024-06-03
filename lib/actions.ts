@@ -4,6 +4,7 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import OpenAI from "openai";
 import { redirect } from 'next/navigation'
+import { sleeper } from './utils';
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
   const time_stamp = new Date().toISOString()
@@ -68,7 +69,6 @@ export async function updateVideoBlog(id: string, blog: string): Promise<{ messa
     };
   }
   revalidatePath('/[id]/edit-blog', 'page')
-  redirect(`/${id}/edit-blog`)
 }
 
 export async function deleteVideo(id: string): Promise<{ message: string } | void> {
@@ -145,19 +145,20 @@ export async function generateBlog( id: string, outline: string, transcript: str
      When generating the blog, follow this outline:\n\n${outline}\n\n
      Include these keyword(s): ${rawFormData.keywords}\n\n
      Finally, be sure to write with this tone of voice: ${rawFormData.tone}`;
-    // const completion = await openai.chat.completions.create({
-    //     messages: [
-    //         {"role": "system", "content": "You an assistant skilled at content creation."},
-    //         {"role": "user", "content": prompt}
-    //     ],
-    //     model: "gpt-3.5-turbo",
-    //   });
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {"role": "system", "content": "You an assistant skilled at content creation."},
+            {"role": "user", "content": prompt}
+        ],
+        model: "gpt-3.5-turbo",
+      });
 
-    // const blog = completion.choices[0].message.content;
-    // console.log(blog)
-    // if (typeof blog === 'string') { await updateVideoBlog(id, blog) }
-    // return blog;
-    console.log(prompt)
+    const blog = completion.choices[0].message.content;
+    console.log(blog)
+    if (typeof blog === 'string') { await updateVideoBlog(id, blog) }
+    return blog;
+
+  //  await sleeper();
   } catch (error: any) {
     // Check if error has a message property
     const errorMessage = error?.message || 'An unexpected error occurred';
