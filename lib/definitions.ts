@@ -9,3 +9,10 @@ export type VideoData = {
   outline: string;
   blog: string;
 };
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+};

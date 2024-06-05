@@ -5,6 +5,9 @@ import { revalidatePath } from 'next/cache';
 import OpenAI from "openai";
 import { redirect } from 'next/navigation'
 import { sleeper } from './utils';
+import * as z from 'zod';
+import bcrypt from 'bcrypt';
+import { User } from './definitions';
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
   const time_stamp = new Date().toISOString()
@@ -166,4 +169,56 @@ export async function generateBlog( id: string, outline: string, transcript: str
   }
 
   // console.log(id, outline, transcript, rawFormData.wordCount, rawFormData.tone, rawFormData.keywords)
+}
+
+
+export async function signupUser(email: string, password: string) {
+  
+  // Check if email already exists.
+  const user = await findOneUser(email);
+  if (user) return { message:`Email ${user.email} already exists. Please use another email.` };
+
+  // Hash password
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Add user to database.
+  addUser(email, hashedPassword)
+
+  // Return success message.
+  return { message:'User created.' }
+}
+
+export async function findOneUser(email: string) {
+
+    const data = await sql<User>`
+      SELECT
+      id,
+      name,
+      email,
+      password
+      FROM users
+      WHERE email = ${email}
+      LIMIT 1;
+    `;
+
+    console.log(data)
+    if (data.rowCount > 0) {
+      const user = data.rows[0];
+      return user
+    } else {
+      return null;
+    }
+}
+
+export async function addUser(email: string, hashedPassword: string): Promise<{ message: string } | void> {
+  try {
+    await sql`
+    INSERT INTO users (name, email, password)
+    VALUES (james, ${email}, ${hashedPassword});
+    `;
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to add user to database.'
+    };
+  }
 }
