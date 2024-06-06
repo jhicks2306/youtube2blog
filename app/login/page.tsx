@@ -1,7 +1,6 @@
 'use client';
 
 import Link from "next/link"
-import { signIn } from "@/auth";
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { authenticate } from "@/lib/actions";
+import { authenticate, logOut } from "@/lib/actions";
 
 export default function LoginForm() {
 

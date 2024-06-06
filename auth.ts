@@ -4,8 +4,10 @@ import * as z from 'zod';
 import bcrypt from 'bcrypt';
 import { findOneUser } from "./lib/actions";
 import { CredentialsSchema } from "./lib/definitions";
+import { authConfig } from "./auth.config";
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {

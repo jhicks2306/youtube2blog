@@ -30,6 +30,8 @@ import {
     Pencil,
   } from "lucide-react"
   import { fetchVideos } from '@/lib/data';
+  import { Button } from '@/components/ui/button';
+  import { logOut } from '@/lib/actions';
 
 
 
@@ -49,6 +51,11 @@ export default async function Page() {
             <UrlForm/>
           </CardContent>
         </Card>
+        <form action={logOut}>
+        <Button type="submit" className="">
+          Sign Out
+        </Button>
+      </form>
         <Card className="flex flex-col grow w-[100%] max-h-screen">
           <CardHeader>
             <CardTitle>Imported Videos</CardTitle>

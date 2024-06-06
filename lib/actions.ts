@@ -8,7 +8,7 @@ import { sleeper } from './utils';
 import * as z from 'zod';
 import bcrypt from 'bcrypt';
 import { User } from './definitions';
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
@@ -243,5 +243,9 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function logOut() {
+  await signOut();
 }
 

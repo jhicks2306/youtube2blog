@@ -78,26 +78,6 @@ export function UrlForm() {
 
         // Add to video and transcript to database
         createVideo(videoData.youtube_id, videoData.title, videoData.image_url, videoData.published_at, transcript)
-
-        // params.set('initalTranscript', initalTranscript);
-
-        // Generate blog title and outline
-        // const openaiResponse = await fetch('/api/generate-outline', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ transcript: initalTranscript }),
-        // });
-    
-        // if (!openaiResponse.ok) {
-        //     throw new Error('Failed to generate blog title and outline');
-        // }
-                    
-        // const openaiData = await openaiResponse.json();
-        // const outline = openaiData.outline;
-        // params.set('outline', outline);
-
-        // // If API call is successful, navigate to outline page
-        // router.push(`/outline?${params.toString()}`);
       
     } catch (err: any) {
       setError(err.message);
