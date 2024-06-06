@@ -3,12 +3,9 @@
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import OpenAI from "openai";
-import { redirect } from 'next/navigation'
-import { sleeper } from './utils';
-import * as z from 'zod';
 import bcrypt from 'bcrypt';
 import { User } from './definitions';
-import { signIn, signOut } from '@/auth';
+import { auth, signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
@@ -249,3 +246,44 @@ export async function logOut() {
   await signOut();
 }
 
+export async function updatePassword(old_password: string, new_password: string) {
+  console.log('Passwords:', old_password, new_password)
+  
+  // Get user session and fetch user.
+  let session = await auth();
+  console.log(session);
+
+  if (!session) return { message: 'No user session found.' };
+  if (typeof session.user?.email !== 'string') return { message: 'No user email found.' };
+  
+  const email = session.user.email;
+  const user = await findOneUser(email);
+
+  if (!user) return {message: 'No matching user found in database. Try logging out and back in first'}
+  console.log(user);
+
+  // Confirm old password is correct.
+  const passwordsMatch = await bcrypt.compare(old_password, user.password);
+  if(!passwordsMatch) return { message: 'Old password incorrect.'}
+
+  // Store new password.
+  const new_hashedPassword = await bcrypt.hash(new_password, 10);
+  const result = await overwritePassword(user.id, new_hashedPassword)  
+
+  return result;
+};
+
+export async function overwritePassword(id: string, new_passwordHashed: string) {
+  try {
+    await sql`
+    UPDATE users
+    SET password = ${new_passwordHashed}
+    WHERE id = ${id};
+    `;
+    console.log("Password successfully updated.")
+    return true;
+  } catch (error) {
+    console.error('Database Error: Password update failed.', error)
+    return false;
+  }
+}
