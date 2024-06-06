@@ -90,7 +90,7 @@ export default function LoginForm() {
             Login with Google
         </Button> */}
         <div className="mt-4 text-center text-sm">
-          Don't have an account?{" "}
+          Do not have an account?{" "}
           <Link href="/" className="underline">
             Sign Up
           </Link>
