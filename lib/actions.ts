@@ -176,16 +176,16 @@ export async function signupUser(email: string, password: string) {
   
   // Check if email already exists.
   const user = await findOneUser(email);
-  if (user) return { message:`Email ${user.email} already exists. Please use another email.` };
+  if (user) return { message: "User already exists." };
 
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Add user to database.
-  addUser(email, hashedPassword)
+  const result = addUser(email, hashedPassword);
 
   // Return success message.
-  return { message:'User created.' }
+  return result;
 }
 
 export async function findOneUser(email: string) {
@@ -210,13 +210,15 @@ export async function findOneUser(email: string) {
     }
 }
 
-export async function addUser(email: string, hashedPassword: string): Promise<{ message: string } | void> {
+export async function addUser(email: string, hashedPassword: string): Promise<{ message: string }> {
   try {
     await sql`
-    INSERT INTO users (name, email, password)
-    VALUES (james, ${email}, ${hashedPassword});
+    INSERT INTO users (email, password)
+    VALUES (${email}, ${hashedPassword});
     `;
-  } catch (error) {
+    return { message: 'User created.'};
+  } catch (error: any) {
+    console.error('Error adding user to database:', error);
     return {
       message: 'Database Error: Failed to add user to database.'
     };
