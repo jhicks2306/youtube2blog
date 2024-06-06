@@ -24,31 +24,22 @@ import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation";
 import { z } from "zod"
 import { signupUser } from "@/lib/actions";
-
-const signUpSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
-  password: z.string()
-    .min(8, { message: 'Password must be at least 8 characters long' })
-    .regex(/[a-z]/, { message: 'Password must include at least one lowercase letter' })
-    .regex(/[A-Z]/, { message: 'Password must include at least one uppercase letter' })
-    .regex(/[0-9]/, { message: 'Password must include at least one number' })
-    .regex(/[\W_]/, { message: 'Password must include at least one special character' }),
-});
+import { CredentialsSchema } from "@/lib/definitions";
 
 export default function SignUpForm() {
   const { toast } = useToast();
   const router = useRouter();
 
   // Define form for Form component.
-  const form = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<z.infer<typeof CredentialsSchema>>({
+    resolver: zodResolver(CredentialsSchema),
     defaultValues: {
       email: '',
       password: '',
     }
   })
 
-  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+  async function onSubmit(values: z.infer<typeof CredentialsSchema>) {
 
     // Try to sign up the user.
     const result = await signupUser(values.email, values.password);

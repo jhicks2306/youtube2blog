@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link"
+import { signIn } from "@/auth";
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -9,41 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { z } from "zod"
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-const signUpSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
-  password: z.string()
-    .min(8, { message: 'Password must be at least 8 characters long' })
-    .regex(/[a-z]/, { message: 'Password must include at least one lowercase letter' })
-    .regex(/[A-Z]/, { message: 'Password must include at least one uppercase letter' })
-    .regex(/[0-9]/, { message: 'Password must include at least one number' })
-    .regex(/[\W_]/, { message: 'Password must include at least one special character' }),
-});
+import { Label } from "@/components/ui/label"
+import { authenticate } from "@/lib/actions";
 
 export default function LoginForm() {
-  const form = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    }
-  })
 
-  async function onSubmit(values: z.infer<typeof signUpSchema>) {
-    //
-  }
 
   return (
     <div className="flex flex-col w-full h-screen place-content-around">
@@ -51,52 +23,50 @@ export default function LoginForm() {
       <CardHeader>
         <CardTitle className="text-2xl">Sign In</CardTitle>
         <CardDescription>
-          Enter your email and password below to login.
+          Enter your email below to login to your account
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="name@mail.com" {...field}/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+        <form
+          action={authenticate}
+        >
+          
+        <div className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id='email'
+              name='email'
+              type="email"
+              placeholder="m@example.com"
+              required
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type='password' {...field}/>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />              
-            <Button type="submit" className="w-full">Login</Button>
-          </form>
-        </Form>
-        {/* <Button variant="outline" className="w-full">
+          </div>
+          <div className="grid gap-2">
+            <div className="flex items-center">
+              <Label htmlFor="password">Password</Label>
+              <Link href="#" className="ml-auto inline-block text-sm underline">
+                Forgot your password?
+              </Link>
+            </div>
+            <Input id='password' name="password" type="password" required />
+          </div>
+          <Button type="submit" className="w-full">
+            Login
+          </Button>
+          {/* <Button variant="outline" className="w-full">
             Login with Google
-        </Button> */}
+          </Button> */}
+        </div>
+      </form>
         <div className="mt-4 text-center text-sm">
-          Do not have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/" className="underline">
-            Sign Up
+            Sign up
           </Link>
         </div>
       </CardContent>
     </Card>
-  </div>
+    </div>
   )
 }

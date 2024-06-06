@@ -8,6 +8,8 @@ import { sleeper } from './utils';
 import * as z from 'zod';
 import bcrypt from 'bcrypt';
 import { User } from './definitions';
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
   const time_stamp = new Date().toISOString()
@@ -201,7 +203,6 @@ export async function findOneUser(email: string) {
       LIMIT 1;
     `;
 
-    console.log(data)
     if (data.rowCount > 0) {
       const user = data.rows[0];
       return user
@@ -224,3 +225,23 @@ export async function addUser(email: string, hashedPassword: string): Promise<{ 
     };
   }
 }
+
+export async function authenticate(
+  formData: FormData,
+) {
+  try {
+    console.log(formData)
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
+  }
+}
+
