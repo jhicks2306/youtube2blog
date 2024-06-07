@@ -7,7 +7,6 @@ import bcrypt from 'bcrypt';
 import { User } from './definitions';
 import { auth, signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
-import { redirect } from 'next/navigation';
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
   const time_stamp = new Date().toISOString()
@@ -195,7 +194,8 @@ export async function findOneUser(email: string) {
       id,
       name,
       email,
-      password
+      password,
+      credits
       FROM users
       WHERE email = ${email}
       LIMIT 1;
@@ -212,8 +212,8 @@ export async function findOneUser(email: string) {
 export async function addUser(email: string, hashedPassword: string): Promise<{ message: string }> {
   try {
     await sql`
-    INSERT INTO users (email, password)
-    VALUES (${email}, ${hashedPassword});
+    INSERT INTO users (email, password, credits)
+    VALUES (${email}, ${hashedPassword}, 0);
     `;
     return { message: 'User created.'};
   } catch (error: any) {
@@ -288,3 +288,80 @@ export async function overwritePassword(id: string, new_passwordHashed: string) 
     return false;
   }
 }
+
+export async function handleCheckoutSessionCompleted(client_reference_id: string, quantity: number) {
+
+  // Calculate credits purchased.
+  const credits = 20 * quantity;
+
+  // Update credits in database.
+  try {
+    await sql`
+    UPDATE users
+    SET credits = credits + ${credits}
+    WHERE id = ${client_reference_id};
+    `;
+    console.log("Credits added to user account.")
+  } catch (error) {
+    console.error('Database Error: Failed to update credits in user account.', error)
+  }
+}
+
+export async function fetchUserInfo() {
+    // Get user session.
+    let session = await auth();
+    const stripePaymentLink = process.env.STRIPE_PAYMENT_LINK;
+
+    if (!session) throw new Error('No active session found.');
+    if (typeof session.user?.email !== 'string') throw new Error('No user email available in session data.');
+
+    // Fetch user and credits.
+    const user = await findOneUser(session.user.email)
+    if(!user) throw new Error('No user found in database.');
+
+    // Construct payment link
+    const splitEmail = user.email.split('@');
+    const stripePaymentLinkWithId = `${stripePaymentLink}?client_reference_id=${user.id}&prefilled_email=${splitEmail[0]}%40${splitEmail[1]}`
+    console.log(stripePaymentLinkWithId)
+
+
+    return { paymentLink: stripePaymentLinkWithId, credits: user.credits.toString() };
+};
+
+export async function useCredit() {
+    // Get user session.
+    let session = await auth();
+
+    if (!session) throw new Error('No active session found.');
+    if (typeof session.user?.email !== 'string') throw new Error('No user email available in session data.');
+    
+    // Fetch user and credits.
+    const user = await findOneUser(session.user.email)
+    if(!user) throw new Error('No user found in database.');
+
+    if (user.credits == 0) return
+
+    // Update credits in database.
+    try {
+      await sql`
+      UPDATE users
+      SET credits = credits - 1
+      WHERE id = ${user.id};
+      `;
+      console.log("Credits added to user account.")
+    } catch (error) {
+      console.error('Database Error: Failed to update credits in user account.', error)
+    }
+    revalidatePath('/dashboard/settings')
+  };
+
+
+
+
+  
+
+
+
+
+
+

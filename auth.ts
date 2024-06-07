@@ -11,6 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
       credentials: {
+        id: {},
         email: {},
         password: {},
       },
@@ -44,6 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }        
  
         // return user object with the their profile data
+        console.log('User object from auth:', user)
         return user;
       },
     }),

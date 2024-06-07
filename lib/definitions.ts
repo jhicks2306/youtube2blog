@@ -17,6 +17,7 @@ export type User = {
   name: string;
   email: string;
   password: string;
+  credits: number;
 };
 
 export const CredentialsSchema = z.object({
