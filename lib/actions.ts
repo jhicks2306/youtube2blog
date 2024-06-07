@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import { User } from './definitions';
 import { auth, signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
+import { redirect } from 'next/navigation';
 
 export async function createVideo(youtube_id: string, title: string, image_url: string, published_at: string, transcript: string): Promise<{ message: string } | void> {
   const time_stamp = new Date().toISOString()

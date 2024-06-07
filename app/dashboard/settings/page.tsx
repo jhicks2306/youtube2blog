@@ -137,11 +137,6 @@ import {
                 Sign out
               </Button>
             </form>
-            <form action={handleButton}>
-              <Button type="submit" className="mt-4">
-                Toast
-              </Button>
-            </form>
           </CardContent>
         </Card>
       </div>
