@@ -328,7 +328,7 @@ export async function fetchUserInfo() {
     return { paymentLink: stripePaymentLinkWithId, credits: user.credits.toString() };
 };
 
-export async function useCredit() {
+export async function minusCredit() {
     // Get user session.
     let session = await auth();
 

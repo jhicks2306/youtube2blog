@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form"
  import { Input } from "@/components/ui/input"
  import { Separator } from "@radix-ui/react-separator"
- import { logOut, updatePassword, useCredit } from "@/lib/actions"
+ import { logOut, updatePassword, minusCredit } from "@/lib/actions"
  import { useForm } from "react-hook-form";
  import { z } from "zod"
  import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,8 +55,8 @@ import {
     }
   };
 
-  async function handleUseCredit() {
-    await useCredit();
+  async function handleMinusCredit() {
+    await minusCredit();
   };
 
   return (
@@ -76,7 +76,7 @@ import {
                 </Button>        
               </Link>
           </form>
-          <Button type="button" onClick={handleUseCredit} className="mt-4">
+          <Button type="button" onClick={handleMinusCredit} className="mt-4">
             Use credit
           </Button>         
           <Separator className="my-10" />
