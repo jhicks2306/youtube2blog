@@ -9,12 +9,6 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 // console.log('Stripe API Key:', apiKey);
 // console.log('Stripe Webhook Secret:', endpointSecret);
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 // Function to read the raw body from the request
 async function readRawBody(req) {
   const reader = req.body.getReader();
